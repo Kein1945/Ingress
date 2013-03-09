@@ -1,8 +1,8 @@
 <?php
-$action = isset($_GET['action'])?$_GET['action']:'';
+global $db, $action, $controller;
 $menu = array(
-    '' => 'Home'
-    , 'players' => 'Players'
+    'Home' => array('','')
+    , 'Players' => array('player', 'list')
 );
 include 'mysql.php';
 ?>
@@ -113,8 +113,9 @@ include 'mysql.php';
                 <div class="container">
                     <ul class="nav">
                     <?php
-    foreach($menu as $action_name=>$label){
-        echo '<li'.(($action == $action_name)?' class="active"':'')."><a href='?action=$action_name'>$label</a></li>";
+    foreach($menu as $label=>$item_action){
+        echo '<li'.(($controller == $item_action[0])?' class="active"':'')."><a
+        href='?action=$item_action[1]&controller=$item_action[0]'>$label</a></li>";
     }
 ?>
                         <!--<li class="active"><a href="#">Home</a></li>

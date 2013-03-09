@@ -1,11 +1,5 @@
 $(function(){
-    var centerMap = new google.maps.LatLng(59.9341,30.3151);
-    var mapOptions = {
-        zoom: 13,
-        center: centerMap,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-    var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
     $.ajax({
         url: '/player_stat.php?action=points&id='+$('#player').val()
         , success: function(data){

@@ -1,6 +1,8 @@
 <?php
-include 'template/head.php';
+include 'init.php';
 
+call_user_func($http_call);
+exit();
 switch ($action) {
     case 'players':
             $res = $db->query('SELECT p.id id,p.name `name`
