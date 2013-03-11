@@ -31,3 +31,23 @@ function player_regionListAjax(){
 	$players = $db->query($sql);
 	template('player/listResult', array('players'=>$players));
 }
+
+function player_detail(){
+    global $db;
+    $id = (isset($_GET['id']) && is_numeric($_GET['id']))?(int)$_GET['id']:0;
+        $res = $db->query("SELECT
+        e.timestamp `time`
+        , pl.name `point`
+        , pl.lat /1000000 `lat`, pl.lon/1000000 `lon`
+        , e.target_id 'resonator'
+        , pt.name `target_point`
+        , action
+FROM `events` e
+LEFT JOIN player p ON p.id = e.user_id
+LEFT JOIN place pl ON pl.id = e.place_id
+LEFT JOIN place pt ON pt.id = e.target_id AND e.target_id > 9
+WHERE p.id = $id
+ORDER BY `timestamp` DESC LIMIT 250");
+    template('player/detail', array('events' => $res, 'id' => $id));
+
+}

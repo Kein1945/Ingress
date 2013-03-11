@@ -10,7 +10,7 @@ $(function(){
                     var pointLL = new google.maps.LatLng(point.lat, point.lon)
                         , marker = new google.maps.Marker({
                             position: pointLL
-                            , map: map
+                            , map: googleMap 
                             , title: point.name
                         })
 
@@ -29,7 +29,7 @@ $(function(){
                             if(openedBuble){
                                 openedBuble.close()
                             }
-                            infoWindow.open(map, marker);
+                            infoWindow.open(googleMap, marker);
                             openedBuble = infoWindow;
                         } else {
                             openedBuble = false;
