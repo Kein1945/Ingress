@@ -98,7 +98,7 @@ include 'mysql.php';
     </style>
     <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
     <script src="/js/jquery.min.js"></script>
 </head>
 
