@@ -1,4 +1,0 @@
-AuthType 'Basic'
-AuthUserFile /hosts/ingress/.htpasswd
-AuthName 'Ingress resistanse only allowed'
-require valid-user

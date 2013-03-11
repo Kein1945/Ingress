@@ -2,6 +2,64 @@
 
 global $db, $action, $controller;
 
+include 'mysql.php';
+session_start();
+
+if(!isset($_SESSION['user'])){
+    require 'openid.php';
+    try {
+        # Change 'localhost' to your domain name.
+        $openid = new LightOpenID('ingress.xs45.info');
+        if(!$openid->mode) {
+            if(isset($_GET['login'])) {
+                $openid->identity = 'https://www.google.com/accounts/o8/id';
+                $openid->required = array('contact/email');
+                header('Location: ' . $openid->authUrl());
+            }
+    ?>
+    <form action="?login" method="post">
+        <button>Login with Google</button>
+    </form>
+    <?php
+        } elseif($openid->mode == 'cancel') {
+            echo 'User has canceled authentication!';
+        } else {
+            $valid = $openid->validate();
+            if($valid){
+                $identify = $openid->identity;
+                $userinfo = $openid->getAttributes();
+                $_SESSION['user'] = $userinfo['contact/email'];
+                isEmailAproved($_SESSION['user']);
+                header('Location: index.php');
+            }
+        }
+    } catch(ErrorException $e) {
+        echo $e->getMessage();
+    }
+    die();
+} else {
+    isEmailAproved($_SESSION['user']);
+}
+function isEmailAproved($email){
+    global $db;
+    $email = $db->real_escape_string($email);
+    $res = $db->query("SELECT aproved, email FROM `users` WHERE `email` = '$email'");
+    if(!$res->num_rows){
+#       $stmt->free_result();
+        $str = $db->prepare('INSERT INTO `users`(`email`) VALUES(?)');
+        $str->bind_param("s",$email);
+        $str->execute();
+        echo 'Please tell to kein.1945@gmail.com to approve you email '.$email;
+        die();
+    } else {
+        $user = $res->fetch_assoc();
+        $aproved = $user['aproved'];
+        if(!$aproved){
+            echo 'Please tell to kein.1945@gmail.com to approve you email '.$email.' '. $aproved;
+            die();
+        }
+    }
+}
 $action = isset($_GET['action'])?strtolower($_GET['action']):'list';
 $controller = isset($_GET['controller'])?str_replace(array('.','/'), '', strtolower($_GET['controller'])):'player';
 $init = false;
@@ -18,7 +76,6 @@ if(!$init){
 	exit(0);
 }
 
-include 'mysql.php';
 function template($template, $data = array()){
 	$template = "template/$template.php";
 	if(!file_exists($template)){
