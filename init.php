@@ -44,18 +44,19 @@ function isEmailAproved($email){
     global $db;
     $email = $db->real_escape_string($email);
     $res = $db->query("SELECT aproved, email FROM `users` WHERE `email` = '$email'");
+    header("Content-Type: text/html; charset=utf-8");
     if(!$res->num_rows){
 #       $stmt->free_result();
         $str = $db->prepare('INSERT INTO `users`(`email`) VALUES(?)');
         $str->bind_param("s",$email);
         $str->execute();
-        echo 'Please tell to kein.1945@gmail.com to approve you email '.$email;
+        echo 'Сообщите ваш емейл игроку Xsci. Я дам вам доступ. '.$email;
         die();
     } else {
         $user = $res->fetch_assoc();
         $aproved = $user['aproved'];
         if(!$aproved){
-            echo 'Please tell to kein.1945@gmail.com to approve you email '.$email.' '. $aproved;
+            echo 'Сообщите ваш емейл игроку Xsci. Я дам вам доступ. '.$email;
             die();
         }
     }
