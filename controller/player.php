@@ -2,7 +2,7 @@
 function player_list(){
 	global $db;
 	$players = $db->query('SELECT p.id id,p.name `name`
-							, MAX(IF(e.target_id < 9 AND e.action = \'deployed an\', e.target_id, 0)) `level`
+							, p.level
 							, LOWER(p.fraction) `fraction` , COUNT(*) `ap`
 							FROM `events` e LEFT JOIN player p ON e.user_id = p.id
 							GROUP BY e.user_id ORDER BY `level` DESC, `ap` DESC
@@ -19,7 +19,7 @@ function player_regionListAjax(){
 	global $db;
 	header('Content-Type: application/json');
 	$sql = "SELECT p.id id,p.name `name`
-				, MAX(IF(e.target_id < 9 AND e.action = 'deployed an', e.target_id, 0)) `level`
+				, p.level
 				, LOWER(p.fraction) `fraction` , COUNT(*) `ap`
 				FROM `events` e
 				LEFT JOIN player p ON e.user_id = p.id
